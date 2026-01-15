@@ -66,7 +66,10 @@ export const Landing: FC = () => {
                 <ConnectBtn type="button" onClick={() => navigate(PathName.Marketplace)}>
                   Spot Market
                 </ConnectBtn>
-                <ConnectBtn type="button" onClick={() => navigate(PathName.Futures)}>
+                <ConnectBtn
+                  type="button"
+                  onClick={() => window.open(process.env.REACT_APP_FUTURES_MARKET_URL, "_blank", "noopener,noreferrer")}
+                >
                   Futures Market
                 </ConnectBtn>
               </ButtonsWrapper>

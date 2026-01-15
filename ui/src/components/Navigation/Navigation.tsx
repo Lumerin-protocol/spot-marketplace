@@ -68,14 +68,14 @@ export const ResponsiveNavigation = (prop: {
       inactiveIcon: SellerIconInactive,
       current: location.pathname === PathName.ValidatorHub,
     },
-    {
-      name: "Futures",
-      to: PathName.Futures,
-      activeIcon: "TrendingUp",
-      inactiveIcon: "TrendingUp",
-      current: location.pathname === PathName.Futures,
-      customIcon: (props: { item: Navigation }) => <TrendingUpIcon style={{ color: "#c2c9d6", fontSize: "24px" }} />,
-    },
+    // {
+    //   name: "Futures",
+    //   to: PathName.Futures,
+    //   activeIcon: "TrendingUp",
+    //   inactiveIcon: "TrendingUp",
+    //   current: location.pathname === PathName.Futures,
+    //   customIcon: (props: { item: Navigation }) => <TrendingUpIcon style={{ color: "#c2c9d6", fontSize: "24px" }} />,
+    // },
   ];
 
   const drawer = (
