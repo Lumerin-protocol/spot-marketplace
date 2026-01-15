@@ -1,4 +1,4 @@
-name: Deploy Spot Marketplace to Hosted Environment
+name: Deploy Spot Marketplace to S3/Cloudfront Environment
 
 on:
   workflow_dispatch:
