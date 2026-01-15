@@ -1,8 +1,15 @@
-import { Suspense, type FC } from "react";
+import { Suspense, useEffect, type FC } from "react";
 import { Route, Routes, Navigate } from "react-router";
 import { PathName } from "./types/types";
 import { safeLazy } from "./utils/safeLazy";
 import { Test } from "./pages/test/test";
+
+const ExternalRedirect: FC<{ url: string }> = ({ url }) => {
+  useEffect(() => {
+    window.location.href = url;
+  }, [url]);
+  return null;
+};
 
 const Landing = safeLazy(() => import("./pages/landing/Landing").then((module) => ({ default: module.Landing })));
 const Marketplace = safeLazy(() =>
@@ -22,7 +29,6 @@ const SellerHub = safeLazy(() =>
 const ValidatorHub = safeLazy(() =>
   import("./pages/validator-hub/ValidatorHub").then((module) => ({ default: module.ValidatorHub })),
 );
-const Futures = safeLazy(() => import("./pages/futures/Futures").then((module) => ({ default: module.Futures })));
 
 export const Router: FC = () => {
   return (
@@ -63,14 +69,10 @@ export const Router: FC = () => {
           }
         />
          <Route path="*" element={<Navigate to="/" replace />} />
-        {/* <Route
+        <Route
           path={PathName.Futures}
-          element={
-            <SuspenseLayoutLazy pageTitle="Futures">
-              <Futures />
-            </SuspenseLayoutLazy>
-          }
-        /> */}
+          element={<ExternalRedirect url={process.env.REACT_APP_FUTURES_MARKET_URL} />}
+        />
         {/* <Route
           path={"/test"}
           element={
