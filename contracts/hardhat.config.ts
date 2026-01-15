@@ -73,9 +73,9 @@ const config: HardhatUserConfig = {
     flat: true,
     spacing: 2,
     only: [
-      "CloneFactory",
+      "CloneFactory.sol",
       "Faucet",
-      "Implementation",
+      "Implementation.sol",
       "LumerinToken",
       "ValidatorRegistry",
       "@openzeppelin/contracts/token/ERC20/IERC20",

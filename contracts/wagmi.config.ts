@@ -13,5 +13,5 @@ export default defineConfig({
       },
     }),
   ],
-  out: "./build-js/src/abi/abi.ts",
+  out: "./abi/abi.ts",
 });

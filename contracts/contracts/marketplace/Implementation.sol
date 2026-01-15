@@ -6,7 +6,7 @@ import { ContextUpgradeable } from "@openzeppelin/contracts-upgradeable/utils/Co
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { CloneFactory } from "./CloneFactory.sol";
-import { HashrateOracle } from "./HashrateOracle.sol";
+import { HashrateOracle } from "hashprice-oracle/contracts/contracts/HashrateOracle.sol";
 import { Versionable } from "../util/versionable.sol";
 
 /// @title Implementation

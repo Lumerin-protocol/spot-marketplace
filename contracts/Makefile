@@ -24,7 +24,7 @@ test-upgrade:
 	yarn hardhat --network localhost test --bail tests/upgrades/*.ts 
 
 compile:
-	yarn hardhat compile
+	yarn wagmi generate
 
 deploy-lumerin:
 	yarn hardhat run --network default ./scripts/deploy-lumerin.ts
