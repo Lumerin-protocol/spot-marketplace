@@ -1,5 +1,5 @@
 import { Suspense, type FC } from "react";
-import { Route, Routes } from "react-router";
+import { Route, Routes, Navigate } from "react-router";
 import { PathName } from "./types/types";
 import { safeLazy } from "./utils/safeLazy";
 import { Test } from "./pages/test/test";
@@ -62,22 +62,23 @@ export const Router: FC = () => {
             </SuspenseLayoutLazy>
           }
         />
-        <Route
+         <Route path="*" element={<Navigate to="/" replace />} />
+        {/* <Route
           path={PathName.Futures}
           element={
             <SuspenseLayoutLazy pageTitle="Futures">
               <Futures />
             </SuspenseLayoutLazy>
           }
-        />
-        <Route
+        /> */}
+        {/* <Route
           path={"/test"}
           element={
             <SuspenseLayoutLazy pageTitle="Futures">
               <Test />
             </SuspenseLayoutLazy>
           }
-        />
+        /> */}
       </Routes>
     </Suspense>
   );
