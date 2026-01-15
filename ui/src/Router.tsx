@@ -1,0 +1,87 @@
+import { Suspense, useEffect, type FC } from "react";
+import { Route, Routes, Navigate } from "react-router";
+import { PathName } from "./types/types";
+import { safeLazy } from "./utils/safeLazy";
+import { Test } from "./pages/test/test";
+
+const ExternalRedirect: FC<{ url: string }> = ({ url }) => {
+  useEffect(() => {
+    window.location.href = url;
+  }, [url]);
+  return null;
+};
+
+const Landing = safeLazy(() => import("./pages/landing/Landing").then((module) => ({ default: module.Landing })));
+const Marketplace = safeLazy(() =>
+  import("./pages/marketplace/Marketplace").then((module) => ({ default: module.Marketplace })),
+);
+const SuspenseLayoutLazy = safeLazy(() =>
+  import("./components/Layouts/SuspenseLayout").then((module) => ({
+    default: module.SuspenseLayout,
+  })),
+);
+
+const BuyerHub = safeLazy(() => import("./pages/buyer-hub/BuyerHub").then((module) => ({ default: module.BuyerHub })));
+
+const SellerHub = safeLazy(() =>
+  import("./pages/seller-hub/SellerHub").then((module) => ({ default: module.SellerHub })),
+);
+const ValidatorHub = safeLazy(() =>
+  import("./pages/validator-hub/ValidatorHub").then((module) => ({ default: module.ValidatorHub })),
+);
+
+export const Router: FC = () => {
+  return (
+    <Suspense>
+      <Routes>
+        <Route path={PathName.Landing} element={<Landing />} />
+        <Route
+          path={PathName.Marketplace}
+          element={
+            <SuspenseLayoutLazy pageTitle="Marketplace">
+              <Marketplace />
+            </SuspenseLayoutLazy>
+          }
+        />
+
+        <Route
+          path={PathName.SellerHub}
+          element={
+            <SuspenseLayoutLazy pageTitle="Seller Hub">
+              <SellerHub />
+            </SuspenseLayoutLazy>
+          }
+        />
+        <Route
+          path={PathName.BuyerHub}
+          element={
+            <SuspenseLayoutLazy pageTitle="Buyer Hub">
+              <BuyerHub />
+            </SuspenseLayoutLazy>
+          }
+        />
+        <Route
+          path={PathName.ValidatorHub}
+          element={
+            <SuspenseLayoutLazy pageTitle="Validator Hub">
+              <ValidatorHub />
+            </SuspenseLayoutLazy>
+          }
+        />
+         <Route path="*" element={<Navigate to="/" replace />} />
+        <Route
+          path={PathName.Futures}
+          element={<ExternalRedirect url={process.env.REACT_APP_FUTURES_MARKET_URL} />}
+        />
+        {/* <Route
+          path={"/test"}
+          element={
+            <SuspenseLayoutLazy pageTitle="Futures">
+              <Test />
+            </SuspenseLayoutLazy>
+          }
+        /> */}
+      </Routes>
+    </Suspense>
+  );
+};
