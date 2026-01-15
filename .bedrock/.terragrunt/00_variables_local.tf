@@ -9,7 +9,7 @@ locals {
   cloudwatch_event_retention = 90
   titanio_net_ecr            = "343351459450.dkr.ecr.us-east-1.amazonaws.com"
   titanio_role_arn           = "arn:aws:iam::${var.account_number}:role/system/bedrock-foundation-role"
-  s3_cf_website              = "marketplace"
+  s3_cf_website              =  "marketplace"
   s3_cf_origin               = "s3spot"
 
   ################################
