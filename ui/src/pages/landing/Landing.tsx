@@ -68,7 +68,7 @@ export const Landing: FC = () => {
                 </ConnectBtn>
                 <ConnectBtn
                   type="button"
-                  onClick={() => window.open(process.env.REACT_APP_FUTURES_MARKET_URL, "_blank", "noopener,noreferrer")}
+                  onClick={() => (window.location.href = process.env.REACT_APP_FUTURES_MARKET_URL)}
                 >
                   Futures Market
                 </ConnectBtn>
