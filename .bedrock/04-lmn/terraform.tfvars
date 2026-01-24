@@ -3,6 +3,26 @@
 create_marketplace_s3cf      = true
 
 ########################################
+# Monitoring Configuration
+########################################
+monitoring = {
+  create                    = true
+  create_alarms             = true
+  create_dashboards         = true
+  create_synthetics_canary  = true   # Full browser-based testing in production
+  notifications_enabled     = true   # Enable notifications in production
+  dev_alerts_topic_name     = "titanio-lmn-dev-alerts"      # Slack
+  devops_alerts_topic_name  = "titanio-lmn-devops-alerts"   # Cell phone (critical)
+  dashboard_period          = 300
+}
+
+# LMN/PROD environment - strict thresholds
+alarm_thresholds = {
+  cloudfront_5xx_threshold = 1
+  cloudfront_4xx_threshold = 5
+}
+
+########################################
 # Shared Contract Addresses
 ########################################
 # Note: ethereum_rpc_url is defined in secret.auto.tfvars (contains API key)
