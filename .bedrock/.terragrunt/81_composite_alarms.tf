@@ -10,7 +10,7 @@
 
 resource "aws_cloudwatch_composite_alarm" "spot_ui_unhealthy" {
   count             = var.monitoring.create && var.monitoring.create_alarms && var.create_marketplace_s3cf ? 1 : 0
-  alarm_name        = "spot-ui-unhealthy-${local.env_suffix}"
+  alarm_name        = "spot-ui-${local.env_suffix}"
   alarm_description = "Spot UI is unhealthy - Route53 health check failing, CloudFront errors, or canary failing (prod only)"
 
   # Alarm rule: ANY of the UI component alarms in ALARM state
@@ -40,9 +40,12 @@ resource "aws_cloudwatch_composite_alarm" "spot_ui_unhealthy" {
     },
   )
 
+  # Include canary_failed in depends_on even when count=0
+  # This ensures proper deletion order when canary is disabled
   depends_on = [
     aws_cloudwatch_metric_alarm.spot_ui_unreachable,
     aws_cloudwatch_metric_alarm.spot_ui_5xx,
-    aws_cloudwatch_metric_alarm.spot_ui_4xx
+    aws_cloudwatch_metric_alarm.spot_ui_4xx,
+    aws_cloudwatch_metric_alarm.canary_failed
   ]
 }
