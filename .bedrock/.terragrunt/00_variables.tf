@@ -78,12 +78,14 @@ variable "monitoring" {
 }
 
 variable "monitoring_schedule" {
-  description = "Schedule rates for monitoring resources (cost optimization - lower frequency = lower cost)"
+  description = "Schedule rates for monitoring resources and alarm timing"
   type = object({
     synthetics_canary_rate_minutes = number  # How often to run canary (5-60)
+    unhealthy_alarm_period_minutes = number  # How long to tolerate "bad" before alarm triggers
   })
   default = {
     synthetics_canary_rate_minutes = 15
+    unhealthy_alarm_period_minutes = 15
   }
 }
 

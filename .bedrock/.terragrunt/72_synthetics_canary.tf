@@ -117,12 +117,12 @@ resource "aws_cloudwatch_metric_alarm" "canary_failed" {
   count               = var.monitoring.create && var.monitoring.create_alarms && var.monitoring.create_synthetics_canary ? 1 : 0
   provider            = aws.use1
   alarm_name          = "spot-ui-canary-failed-${local.env_suffix}"
-  alarm_description   = "Spot UI Synthetics Canary is failing - browser-based checks not passing"
+  alarm_description   = "Spot UI Canary failing for ${var.monitoring_schedule.unhealthy_alarm_period_minutes} min"
   comparison_operator = "LessThanThreshold"
-  evaluation_periods  = 2
+  evaluation_periods  = local.canary_alarm_evaluation_periods
   metric_name         = "SuccessPercent"
   namespace           = "CloudWatchSynthetics"
-  period              = 300
+  period              = var.monitoring_schedule.synthetics_canary_rate_minutes * 60
   statistic           = "Average"
   threshold           = 90
   treat_missing_data  = "breaching"

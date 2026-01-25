@@ -35,6 +35,15 @@ locals {
   
   # Extract domain for Route53 health check (remove https://)
   spot_ui_domain = var.account_lifecycle == "prd" ? "marketplace.lumerin.io" : "marketplace.${var.account_lifecycle}.lumerin.io"
+  
+  # Alarm evaluation periods - calculated from unhealthy_alarm_period_minutes
+  # Different metric sources have different native periods:
+  #   - Standard CloudWatch CloudFront metrics: 300 sec (5 min) periods
+  #   - Route53 health checks: 60 sec (1 min) periods
+  #   - Canary: runs at configurable rate
+  standard_alarm_evaluation_periods = ceil(var.monitoring_schedule.unhealthy_alarm_period_minutes / 5)
+  route53_alarm_evaluation_periods  = var.monitoring_schedule.unhealthy_alarm_period_minutes  # period = 60 sec = 1 min
+  canary_alarm_evaluation_periods   = max(1, ceil(var.monitoring_schedule.unhealthy_alarm_period_minutes / var.monitoring_schedule.synthetics_canary_rate_minutes))
 }
 
 ################################################################################
