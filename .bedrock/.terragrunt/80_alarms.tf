@@ -16,13 +16,13 @@ resource "aws_cloudwatch_metric_alarm" "spot_ui_unreachable" {
   provider            = aws.use1  # Route53 metrics are only in us-east-1
   alarm_name          = "spot-ui-unreachable-${local.env_suffix}"
   comparison_operator = "LessThanThreshold"
-  evaluation_periods  = 2
+  evaluation_periods  = local.route53_alarm_evaluation_periods
   metric_name         = "HealthCheckStatus"
   namespace           = "AWS/Route53"
   period              = 60
   statistic           = "Minimum"
   threshold           = 1
-  alarm_description   = "Spot UI is unreachable - Route53 health check failing"
+  alarm_description   = "Spot UI unreachable for ${var.monitoring_schedule.unhealthy_alarm_period_minutes} min"
   treat_missing_data  = "breaching"
 
   dimensions = {
@@ -47,13 +47,13 @@ resource "aws_cloudwatch_metric_alarm" "spot_ui_5xx" {
   count               = var.monitoring.create && var.monitoring.create_alarms && var.create_marketplace_s3cf ? 1 : 0
   alarm_name          = "spot-ui-5xx-errors-${local.env_suffix}"
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 2
+  evaluation_periods  = local.standard_alarm_evaluation_periods
   metric_name         = "5xxErrorRate"
   namespace           = "AWS/CloudFront"
   period              = 300
   statistic           = "Average"
   threshold           = var.alarm_thresholds.cloudfront_5xx_threshold
-  alarm_description   = "Spot UI CloudFront 5xx error rate is elevated (>${var.alarm_thresholds.cloudfront_5xx_threshold}%)"
+  alarm_description   = "Spot UI CloudFront 5xx errors for ${var.monitoring_schedule.unhealthy_alarm_period_minutes} min"
   treat_missing_data  = "notBreaching"
 
   dimensions = {
@@ -79,13 +79,13 @@ resource "aws_cloudwatch_metric_alarm" "spot_ui_4xx" {
   count               = var.monitoring.create && var.monitoring.create_alarms && var.create_marketplace_s3cf ? 1 : 0
   alarm_name          = "spot-ui-4xx-errors-${local.env_suffix}"
   comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 2
+  evaluation_periods  = local.standard_alarm_evaluation_periods
   metric_name         = "4xxErrorRate"
   namespace           = "AWS/CloudFront"
   period              = 300
   statistic           = "Average"
   threshold           = var.alarm_thresholds.cloudfront_4xx_threshold
-  alarm_description   = "Spot UI CloudFront 4xx error rate is elevated (>${var.alarm_thresholds.cloudfront_4xx_threshold}%) - may indicate missing content"
+  alarm_description   = "Spot UI CloudFront 4xx errors for ${var.monitoring_schedule.unhealthy_alarm_period_minutes} min"
   treat_missing_data  = "notBreaching"
 
   dimensions = {

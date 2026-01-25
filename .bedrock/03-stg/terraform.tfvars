@@ -9,11 +9,17 @@ monitoring = {
   create                    = true
   create_alarms             = true
   create_dashboards         = true
-  create_synthetics_canary  = false  # Canary only in production
-  notifications_enabled     = false  # Enable when needed
+  create_synthetics_canary  = true  # Canary only in production
+  notifications_enabled     = true  # Enable when needed
   dev_alerts_topic_name     = "titanio-stg-dev-alerts"
   devops_alerts_topic_name  = "titanio-stg-dev-alerts"
   dashboard_period          = 300
+}
+
+# STG environment - moderate frequency and tolerance
+monitoring_schedule = {
+  synthetics_canary_rate_minutes = 30  # If canary enabled, run every 30 min
+  unhealthy_alarm_period_minutes = 30  # How long to tolerate "bad" before alarm triggers
 }
 
 # STG environment - moderate thresholds
