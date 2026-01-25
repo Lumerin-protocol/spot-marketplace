@@ -16,6 +16,11 @@ monitoring = {
   dashboard_period          = 300
 }
 
+# LMN/PROD environment - highest frequency for rapid detection
+monitoring_schedule = {
+  synthetics_canary_rate_minutes = 15  # Run canary every 15 min (production critical)
+}
+
 # LMN/PROD environment - strict thresholds
 alarm_thresholds = {
   cloudfront_5xx_threshold = 1

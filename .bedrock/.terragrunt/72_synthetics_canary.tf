@@ -86,7 +86,7 @@ resource "aws_synthetics_canary" "spot_ui" {
   start_canary         = true
 
   schedule {
-    expression = "rate(5 minutes)"
+    expression = "rate(${var.monitoring_schedule.synthetics_canary_rate_minutes} minutes)"
   }
 
   run_config {

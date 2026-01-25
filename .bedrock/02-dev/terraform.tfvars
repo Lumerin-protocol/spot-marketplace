@@ -17,6 +17,11 @@ monitoring = {
   dashboard_period          = 300
 }
 
+# DEV environment - lowest frequency to reduce cost
+monitoring_schedule = {
+  synthetics_canary_rate_minutes = 60  # If canary enabled, run every 60 min
+}
+
 # DEV environment - relaxed thresholds
 alarm_thresholds = {
   cloudfront_5xx_threshold = 5

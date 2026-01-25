@@ -16,6 +16,11 @@ monitoring = {
   dashboard_period          = 300
 }
 
+# STG environment - moderate frequency
+monitoring_schedule = {
+  synthetics_canary_rate_minutes = 30  # If canary enabled, run every 30 min
+}
+
 # STG environment - moderate thresholds
 alarm_thresholds = {
   cloudfront_5xx_threshold = 3
