@@ -10,7 +10,16 @@ on:
       - dev
       - cicd/*
 
-    paths: [".github/**", "ui/src/**", "ui/public/**", "ui/package.json", "ui/yarn.lock", "ui/vite.config.ts", "ui/tsconfig.json", "ui/index.html", "ui/LICENSE", "ui/README.md"]
+    paths: [
+      ".github/**", 
+      "ui/src/**", 
+      "ui/public/**", 
+      "ui/package.json", 
+      "ui/yarn.lock", 
+      "ui/vite.config.ts", 
+      "ui/tsconfig.json", 
+      "ui/index.html",
+      ".github/workflows/deploy-spot-ui.yml"]
 
 concurrency:
   group: ci-${{ github.ref }}
