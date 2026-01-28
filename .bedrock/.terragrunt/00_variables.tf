@@ -49,14 +49,61 @@ variable "multicall_address" {
   default     = ""
 }
 
-### Secret Variables
-# These variables are now only for documentation and input validation; values are always pulled from AWS Secrets Manager
+################################################################################
+# MONITORING CONFIGURATION
+################################################################################
 
+variable "monitoring" {
+  description = "Monitoring configuration for alarms, dashboards, and health checks"
+  type = object({
+    create                    = bool
+    create_alarms             = bool
+    create_dashboards         = bool
+    create_synthetics_canary  = bool    # Synthetics canary for UI (production only)
+    notifications_enabled     = bool    # Set false to disable SNS notifications (alarms still visible in console)
+    dev_alerts_topic_name     = string  # Slack notifications
+    devops_alerts_topic_name  = string  # Cell phone (critical, prod only)
+    dashboard_period          = number
+  })
+  default = {
+    create                    = false
+    create_alarms             = false
+    create_dashboards         = false
+    create_synthetics_canary  = false
+    notifications_enabled     = false
+    dev_alerts_topic_name     = ""
+    devops_alerts_topic_name  = ""
+    dashboard_period          = 300
+  }
+}
 
-# Note: GitHub Actions CI/CD configuration is now auto-derived from account_lifecycle
-# No manual variables needed - prevents human error
+variable "monitoring_schedule" {
+  description = "Schedule rates for monitoring resources and alarm timing"
+  type = object({
+    synthetics_canary_rate_minutes = number  # How often to run canary (5-60)
+    unhealthy_alarm_period_minutes = number  # How long to tolerate "bad" before alarm triggers
+  })
+  default = {
+    synthetics_canary_rate_minutes = 15
+    unhealthy_alarm_period_minutes = 15
+  }
+}
 
+variable "alarm_thresholds" {
+  description = "Environment-specific alarm thresholds (relaxed for dev/stg, strict for prod)"
+  type = object({
+    cloudfront_5xx_threshold = number  # Percentage
+    cloudfront_4xx_threshold = number  # Percentage
+  })
+  default = {
+    cloudfront_5xx_threshold = 5
+    cloudfront_4xx_threshold = 10
+  }
+}
+
+########################################
 # Common Account Variables
+########################################
 variable "account_shortname" { description = "Code describing customer  and lifecycle. E.g., mst, sbx, dev, stg, prd" }
 variable "account_lifecycle" {
   description = "environment lifecycle, can be 'prod', 'nonprod', 'sandbox'...dev and stg are considered nonprod"
