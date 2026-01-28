@@ -3,6 +3,32 @@
 create_marketplace_s3cf      = true
 
 ########################################
+# Monitoring Configuration
+########################################
+monitoring = {
+  create                    = true
+  create_alarms             = true
+  create_dashboards         = true
+  create_synthetics_canary  = true  # Canary only in production
+  notifications_enabled     = true  # Enable when needed
+  dev_alerts_topic_name     = "titanio-stg-dev-alerts"
+  devops_alerts_topic_name  = "titanio-stg-dev-alerts"
+  dashboard_period          = 300
+}
+
+# STG environment - moderate frequency and tolerance
+monitoring_schedule = {
+  synthetics_canary_rate_minutes = 30  # If canary enabled, run every 30 min
+  unhealthy_alarm_period_minutes = 30  # How long to tolerate "bad" before alarm triggers
+}
+
+# STG environment - moderate thresholds
+alarm_thresholds = {
+  cloudfront_5xx_threshold = 3
+  cloudfront_4xx_threshold = 8
+}
+
+########################################
 # Shared Contract Addresses
 ########################################
 # Note: ethereum_rpc_url is defined in secret.auto.tfvars (contains API key)
