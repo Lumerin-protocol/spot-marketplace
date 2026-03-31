@@ -50,21 +50,16 @@ resource "aws_iam_role" "github_actions_spot" {
             # 3. Lumerin-protocol/proxy-indexer (spot indexer)
             # Branch filters are auto-derived based on environment lifecycle
             "token.actions.githubusercontent.com:sub" = concat(
-              # Smart contracts repo (services)
-              # [
-              #   for branch_filter in local.github_branch_filter :
-              #   "repo:${local.github_org_repo}:${branch_filter}"
-              # ],
-              # Router UI repo (marketplace)
+              # Spot marketplace UI repo
               var.create_marketplace_s3cf ? [
                 for branch_filter in local.github_branch_filter :
                 "repo:Lumerin-protocol/spot-marketplace:${branch_filter}"
-              ] : [] #,
-              # # Spot Indexer repo
-              # var.create_lumerin_indexer ? [
-              #   for branch_filter in local.github_branch_filter :
-              #   "repo:Lumerin-protocol/proxy-indexer:${branch_filter}"
-              # ] : []
+              ] : [],
+              # Spot indexer repo (proxy-indexer) — ECS deploy
+              [
+                for branch_filter in local.github_branch_filter :
+                "repo:Lumerin-protocol/proxy-indexer:${branch_filter}"
+              ]
             )
           }
         }
@@ -98,6 +93,51 @@ resource "aws_iam_role_policy" "github_secrets_read" {
           "secretsmanager:DescribeSecret"
         ]
         Resource = aws_secretsmanager_secret.spot[count.index].arn
+      }
+    ]
+  })
+}
+
+################################################################################
+# SPOT INDEXER ECS DEPLOYMENT POLICY (for proxy-indexer CI/CD)
+################################################################################
+
+resource "aws_iam_role_policy" "github_indexer_deploy_ecs" {
+  count = var.create_marketplace_s3cf ? 1 : 0
+  name  = "indexer-deploy-ecs"
+  role  = aws_iam_role.github_actions_spot[0].id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "ECSDescribeAndRegisterTask"
+        Effect = "Allow"
+        Action = [
+          "ecs:DescribeTaskDefinition",
+          "ecs:RegisterTaskDefinition"
+        ]
+        Resource = "*"
+      },
+      {
+        Sid    = "ECSUpdateAndDescribeService"
+        Effect = "Allow"
+        Action = [
+          "ecs:UpdateService",
+          "ecs:DescribeServices"
+        ]
+        Resource = "arn:aws:ecs:${var.default_region}:${var.account_number}:service/ecs-hashprice-oracle-${local.env_prefix}/*"
+      },
+      {
+        Sid    = "PassTaskRole"
+        Effect = "Allow"
+        Action = "iam:PassRole"
+        Resource = "arn:aws:iam::${var.account_number}:role/system/bedrock-foundation-role"
+        Condition = {
+          StringEquals = {
+            "iam:PassedToService" = "ecs-tasks.amazonaws.com"
+          }
+        }
       }
     ]
   })
